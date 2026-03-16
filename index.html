@@ -201,32 +201,10 @@ body {
 @media (max-width: 900px) {
   body.view-stacked .timeline-scroll { overflow-x: hidden; }
   body.view-stacked .phases-row {
+    min-width: 0;
     display: grid;
     grid-template-columns: 1fr;
     row-gap: 16px;
-    position: relative;
-  }
-
-  /* Vertical rail in stacked mode */
-  body.view-stacked .phases-row::before {
-    content: '';
-    position: absolute;
-    left: 27px; /* center of node */
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: linear-gradient(180deg,
-      #6366f1, #3b82f6, #06b6d4, #10b981,
-      #f59e0b, #f97316, #f43f5e, #8b5cf6, #10b981);
-    background-size: 100% 400%;
-    border-radius: 99px;
-    animation: railFlowVertical 10s linear infinite;
-    box-shadow: 0 0 20px rgba(59,130,246,0.4);
-  }
-
-  @keyframes railFlowVertical {
-    0%{background-position: 50% 0%}
-    100%{background-position: 50% 400%}
   }
 
   /* Hide the horizontal rail visual in stacked mode */
@@ -241,17 +219,17 @@ body {
     cursor: default;
   }
 
-  /* Phase layout: node + card in a row, wider card */
+  /* Phase layout: node + card in a row */
   body.view-stacked .phase-item {
     display: grid;
-    grid-template-columns: 40px 1fr;
+    grid-template-columns: 54px 1fr;
     gap: 12px;
   }
 
   body.view-stacked .phase-node {
     margin-top: 0 !important;
-    width: 36px;
-    height: 36px;
+    width: 48px;
+    height: 48px;
     justify-self: start;
     align-self: start;
   }
@@ -262,13 +240,6 @@ body {
     width: 100%;
     text-align: left;
     padding: 14px 14px;
-    max-height: 200px;
-    transition: max-height 0.3s ease;
-  }
-
-  /* Collapse phase cards when any gate is open */
-  body.has-open-gate .phase-card {
-    max-height: 50px;
   }
 
   /* Gate layout: diamond + label, then tooltip below */
@@ -380,7 +351,7 @@ body {
    ISO PILL ROW
 ═══════════════════════════════════════ */
 .iso-pills {
-  display:flex; flex-wrap:wrap; gap:20px;
+  display:flex; flex-wrap:center; gap:20px;
   justify-content:center;
   padding: 0 20px 36px;
   position:relative; z-index:10;
@@ -674,6 +645,8 @@ body {
 }
 
 /* Expand holder (pushes content down) */
+.gate-item:hover .gate-tooltip-holder,
+.gate-item:focus-within .gate-tooltip-holder,
 .gate-item.is-open .gate-tooltip-holder {
   max-height: 260px;     /* must be >= tooltip height */
   margin-top: 8px;
@@ -703,8 +676,9 @@ body {
               0 0 0 1px var(--gc);
 }
 
-/* Show tooltip on open */
-.gate-item.is-open .gate-tooltip {
+/* Show tooltip on hover/focus */
+.gate-item:hover .gate-tooltip,
+.gate-item:focus-within .gate-tooltip {
   opacity: 1;
   transform: translateY(0) scale(1);
 }
@@ -1499,7 +1473,7 @@ body {
   <img class="img-Flake" src="img/FlakeWhite.png" alt="Aeromag Flake">
   <br>· ISO 9001 · ISO 14001 · ISO 42001 · ISO 45001 · 17 Global Stations · HQ Montreal
   <br><span style="color:#E0ED35;margin-top:4px;display:block">
-    Click stage gate diamonds ◆ to view gate criteria · Stage gates SG0–SG7
+    Hover over stage gate diamonds ◆ to view gate criteria · Stage gates SG0–SG8
   </span>
 </div>
 
@@ -1611,37 +1585,6 @@ document.querySelectorAll('.gate-item').forEach((item, i) => {
     item.style.opacity = '1';
     item.style.transition = 'opacity 0.4s ease';
   }, 700 + i * 120);
-});
-
-// ── MOBILE VIEW TOGGLE ──
-document.querySelectorAll('.vt-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const view = btn.textContent.trim().toLowerCase();
-    document.body.classList.toggle('view-stacked', view === 'stacked');
-    document.querySelectorAll('.vt-btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
-    btn.setAttribute('aria-pressed', 'true');
-  });
-});
-
-// Set default to stacked on mobile
-if (window.innerWidth <= 900) {
-  document.body.classList.add('view-stacked');
-  const stackedBtn = document.querySelector('.vt-btn:last-child');
-  if (stackedBtn) stackedBtn.setAttribute('aria-pressed', 'true');
-}
-
-// ── GATE EXPAND ON CLICK ──
-document.querySelectorAll('.gate-item').forEach(gate => {
-  gate.addEventListener('click', (e) => {
-    e.preventDefault();
-    // Close all others
-    document.querySelectorAll('.gate-item').forEach(g => g.classList.remove('is-open'));
-    // Toggle this one
-    gate.classList.toggle('is-open');
-    // Update body class
-    const hasOpen = document.querySelector('.gate-item.is-open') !== null;
-    document.body.classList.toggle('has-open-gate', hasOpen);
-  });
 });
 </script>
 </body>
