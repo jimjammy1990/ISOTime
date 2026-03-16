@@ -1570,13 +1570,21 @@ document.querySelectorAll('.phase-item').forEach((item, i) => {
   }, 400 + i * 120);
 });
 
-document.querySelectorAll('.gate-item').forEach((item, i) => {
-  item.style.opacity = '0';
-  setTimeout(() => {
-    item.style.opacity = '1';
-    item.style.transition = 'opacity 0.4s ease';
-  }, 700 + i * 120);
+// ── MOBILE VIEW TOGGLE ──
+document.querySelectorAll('.vt-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const view = btn.textContent.trim().toLowerCase();
+    document.body.classList.toggle('view-stacked', view === 'stacked');
+    document.querySelectorAll('.vt-btn').forEach(b => b.setAttribute('aria-pressed', 'false'));
+    btn.setAttribute('aria-pressed', 'true');
+  });
 });
+
+// Set default to stacked on mobile
+if (window.innerWidth <= 900) {
+  document.body.classList.add('view-stacked');
+  document.querySelector('.vt-btn:last-child').setAttribute('aria-pressed', 'true');
+}
 </script>
 </body>
 </html>
