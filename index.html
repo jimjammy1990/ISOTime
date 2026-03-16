@@ -130,29 +130,6 @@ body {
   .mobile-ui { display: grid; }
 }
 
-/* =========================================================
-   A) SWIPE HORIZONTAL TIMELINE (DEFAULT MOBILE)
-   ========================================================= */
-.timeline-scroll {
-  overflow-x: auto;
-  overflow-y: visible;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  padding-bottom: 10px;
-}
-
-.timeline-scroll::-webkit-scrollbar { height: 8px; }
-.timeline-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.18);
-  border-radius: 999px;
-}
-
-/* Ensure there is a natural width for the row (prevents squashing) */
-@media (max-width: 900px) {
-  .timeline-scroll { margin: 0 -16px; padding: 0 16px 10px; }
-  .phases-row { min-width: 1020px; } /* adjust if you add more phases */
-  .gate-tooltip { width: 240px; }
-}
 
 /* =========================================================
    Gate tooltips: push-down holder + tap support class
@@ -193,83 +170,6 @@ body {
 
 /* Make tap targets more friendly */
 .gate-diamond, .phase-node { touch-action: manipulation; }
-
-/* =========================================================
-   B) STACKED VERTICAL TIMELINE (OPTIONAL MOBILE VIEW)
-   Activate by adding: body.view-stacked
-   ========================================================= */
-@media (max-width: 900px) {
-  body.view-stacked .timeline-scroll { overflow-x: hidden; }
-  body.view-stacked .phases-row {
-    min-width: 0;
-    display: grid;
-    grid-template-columns: 1fr;
-    row-gap: 16px;
-  }
-
-  /* Hide the horizontal rail visual in stacked mode */
-  body.view-stacked .rail-line,
-  body.view-stacked .rail-dot { display: none; }
-
-  /* Make items full-width cards */
-  body.view-stacked .phase-item,
-  body.view-stacked .gate-item {
-    width: 100%;
-    align-items: stretch;
-    cursor: default;
-  }
-
-  /* Phase layout: node + card in a row */
-  body.view-stacked .phase-item {
-    display: grid;
-    grid-template-columns: 54px 1fr;
-    gap: 12px;
-  }
-
-  body.view-stacked .phase-node {
-    margin-top: 0 !important;
-    width: 48px;
-    height: 48px;
-    justify-self: start;
-    align-self: start;
-  }
-
-  body.view-stacked .connector { display: none; }
-
-  body.view-stacked .phase-card {
-    width: 100%;
-    text-align: left;
-    padding: 14px 14px;
-  }
-
-  /* Gate layout: diamond + label, then tooltip below */
-  body.view-stacked .gate-item {
-    display: grid;
-    grid-template-columns: 54px 1fr;
-    gap: 12px;
-  }
-
-  body.view-stacked .gate-diamond {
-    margin-top: 0;
-    justify-self: start;
-    align-self: start;
-  }
-
-  body.view-stacked .gate-label {
-    display: block; /* show labels in stacked mode */
-    width: auto;
-    text-align: left;
-    margin-top: 4px;
-  }
-
-  body.view-stacked .gate-tooltip-holder {
-    grid-column: 1 / -1;
-  }
-
-  body.view-stacked .gate-tooltip {
-    width: 100%;
-  }
-}
 
 /* ═══════════════════════════════════════
    PARTICLE CANVAS
@@ -351,7 +251,7 @@ body {
    ISO PILL ROW
 ═══════════════════════════════════════ */
 .iso-pills {
-  display:flex; flex-wrap:center; gap:20px;
+  display:flex; flex-wrap:center; gap:30px;
   justify-content:center;
   padding: 0 20px 36px;
   position:relative; z-index:10;
@@ -360,11 +260,11 @@ body {
 .iso-pill {
   display:flex; align-items:center; gap:7px;
   background:var(--surface); border:1px solid var(--border);
-  border-radius:10px; padding:7px 14px;
+  border-radius:10px; padding:10px 40px;
   font-size:12px; font-weight:600;
 }
 .iso-pill-dot {
-  width:8px; height:8px; border-radius:50%;
+  width:8px; height:10px; border-radius:50%;
   animation: pulse 2s ease-in-out infinite;
 }
 @keyframes pulse {
@@ -421,7 +321,7 @@ body {
   top:104px;
   width:16px; height:16px;
   border-radius:50%;
-  background:#fff;
+  background:#ffffff;
   box-shadow:0 0 20px #ffffff, 0 0 40px var(--blue);
   animation: railDotMove 20s ease-in-out infinite;
   z-index:20;
@@ -437,7 +337,7 @@ body {
 .phases-row {
   display:flex;
   align-items:flex-start;
-  justify-content:space-between;
+  justify-content:flex-start;
   position:relative;
   gap: 2px;;
 }
@@ -530,8 +430,8 @@ body {
   transform:translateY(-4px);
   box-shadow:0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px var(--nc);
 }
-.phase-card.above { margin-bottom:8px; }
-.phase-card.below { margin-top:8px; }
+.phase-card.above { margin-bottom:6px; }
+.phase-card.below { margin-top:6px; }
 
 .phase-num {
   font-size:9px; font-weight:700; letter-spacing:1.2px;
@@ -654,14 +554,13 @@ body {
   pointer-events: auto;
 }
 
-
 /* Tooltip box itself */
 .gate-tooltip {
   width: 220px;
   background: var(--surface2);
   border: 1px solid var(--gc);
   border-radius: 12px;
-  padding: 14px;
+  padding: 10px;
 
   /* hidden animation state */
   opacity: 0;
@@ -886,62 +785,39 @@ body {
 }
 
 /* ═══════════════════════════════════════
-   SCROLL PROGRESS BAR
-═══════════════════════════════════════ */
-#scroll-progress {
-  position:fixed; top:0; left:0; height:3px; z-index:999;
-  background:linear-gradient(90deg, var(--blue), var(--cyan), var(--green));
-  width:0%; transition:width 0.1s;
-}
-
-/* ═══════════════════════════════════════
    RESPONSIVE
 ═══════════════════════════════════════ */
-@media(max-width:900px){
-  .timeline-section { padding:20px 16px 60px; }
-  .phase-card { width:108px; }
-  .phase-title { font-size:10px; }
-  .gate-label { width:70px; font-size:8px; }
+@media(max-width:800px){
+}
+.timeline-section{
+  max-width: 800px;
+  margin-inline: auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+.phase-card{
+  width: clamp(44px, 9vw, 72px);
+  flex: 0 0 auto;                /* critical: no shrinking/overlap */
+  box-sizing: border-box;
+  padding: clamp(8px, 1.2vw, 12px) clamp(6px, 1vw, 10px);
+  container-type: inline-size;
+}
+.phase-title{
+  font-size: clamp(1rem, 5vw+1rem, 4rem);}
+  .gate-label { width:40px; font-size:6px; }
   .gate-tooltip { display:none; }
+  .gate-item.is-open .gate-tooltip { display:block; }
   .detail-panel { padding:0 16px 60px; }
   .year-banners { padding:0 16px 40px; flex-wrap:wrap; }
-}
-@media(max-width:600px){
-  .phases-row { gap:0; }
-  .phase-card { width:82px; padding:10px 6px; }
-  .phase-title { font-size:9px; }
-  .phase-node { width:40px; height:40px; font-size:14px; margin-top:88px; }
-  .gate-diamond { width:26px; height:26px; margin-top:97px; }
-  .gate-label { display:none; }
-}
 
-/* ---------- Mobile timeline swipe support ---------- */
-.timeline-scroll {
-  overflow-x: auto;
-  overflow-y: visible;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  padding-bottom: 10px;
+@supports not (font-size: 1cqi){
 }
-
-.timeline-scroll::-webkit-scrollbar {
-  height: 8px;
-}
-.timeline-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.18);
-  border-radius: 999px;
-}
-
-/* Ensure the phases row has a minimum width so nodes don’t squash */
-.phases-row {
-  min-width: 980px; /* tweak if you add more phases */
-}
-
-/* On small screens, keep it readable */
-  .timeline-scroll {
-    margin: 0 -16px;     /* allows edge-to-edge swipe */
-    padding: 0 16px 10px;
-  }
+  .phase-title{ font-size: clamp(5px, 1.8vw, 8px); }
+  .phase-node { width: clamp(18px, 3.8vw, 26px); height: clamp(18px, 3.8vw, 26px); }
+  .phase-label { font-size: clamp(6px, 1.6vw, 10px); }
+  .gate-label { font-size: clamp(4px, 1.6vw, 6px); }
+  .phase-node { width:20px; height:20px; font-size:5px; margin-top:88px; }
+  .gate-diamond { width:15px; height:15px; margin-top:97px; }
 
 </style>
 </head>
@@ -974,7 +850,6 @@ body {
      MAIN ANIMATED TIMELINE RAIL
 ═══════════════════════════════ -->
 <div class="timeline-section">
-    <div class="timeline-scroll" aria-label="Timeline (swipe left/right on mobile)"></div>
   <div class="rail-wrapper">
     <div class="rail-line"></div>
     <div class="rail-dot"></div>
@@ -1473,7 +1348,7 @@ body {
   <img class="img-Flake" src="img/FlakeWhite.png" alt="Aeromag Flake">
   <br>· ISO 9001 · ISO 14001 · ISO 42001 · ISO 45001 · 17 Global Stations · HQ Montreal
   <br><span style="color:#E0ED35;margin-top:4px;display:block">
-    Hover over stage gate diamonds ◆ to view gate criteria · Stage gates SG0–SG8
+    Hover or tap stage gate diamonds ◆ to view gate criteria · Stage gates SG0–SG7
   </span>
 </div>
 
@@ -1585,6 +1460,22 @@ document.querySelectorAll('.gate-item').forEach((item, i) => {
     item.style.opacity = '1';
     item.style.transition = 'opacity 0.4s ease';
   }, 700 + i * 120);
+});
+
+// ── MOBILE GATE DIAMOND CLICK TO TOGGLE TOOLTIP ──
+document.querySelectorAll('.gate-diamond').forEach(diamond => {
+  diamond.addEventListener('click', (e) => {
+    e.preventDefault();
+    const gateItem = diamond.closest('.gate-item');
+    // Close other open gates
+    document.querySelectorAll('.gate-item.is-open').forEach(openItem => {
+      if (openItem !== gateItem) {
+        openItem.classList.remove('is-open');
+      }
+    });
+    // Toggle this one
+    gateItem.classList.toggle('is-open');
+  });
 });
 </script>
 </body>
